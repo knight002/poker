@@ -1,0 +1,32 @@
+<?php echo $this->doctype() ?>
+<?php $action = Zend_Controller_Front::getInstance()->getRequest()->getParam('action'); ?>
+<html>
+
+	<head>
+
+<?php //$this->headLink()->prependStylesheet('/vendor/jquery-ui-1.11.4.custom/jquery-ui.min.css', 'all') ?>
+<?php //$this->headLink()->prependStylesheet('/vendor/bootstrap-3.3.6-dist/css/bootstrap.min.css', 'all') ?>
+
+<?php //$this->inlineScript()->prependFile('/vendor/jquery-ui-1.11.4.custom/jquery-ui.min.js'); ?>
+<?php //$this->inlineScript()->prependFile('/vendor/bootstrap-3.3.6-dist/js/bootstrap.min.js'); ?>
+<?php //$this->inlineScript()->prependFile('/js/vendor/jquery-1.12.3.min.js'); ?>
+
+
+<?php echo $this->headMeta() ?>
+
+<?php echo $this->headTitle() ?>
+
+<?php echo $this->headLink() ?>
+
+<?php echo $this->headStyle() ?>
+<?php echo $this->headScript() ?>
+
+	</head>
+
+	<body lang="en" class="<?php echo Zend_Controller_Front::getInstance()->getRequest()->getParam('action') ?>">
+
+<?php echo $this->layout()->content; ?>
+
+<?php echo $this->inlineScript() ?>
+	</body>
+</html>

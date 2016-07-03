@@ -1,0 +1,10 @@
+/nbproject
+/tmp
+~*
+.DS_Store
+*.mwb.bak
+/library/Zend
+/library/ZendX
+admin
+/public/upload
+/uploads/*
