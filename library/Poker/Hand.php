@@ -35,8 +35,8 @@ class Poker_Hand extends Poker_Deck
 
 	public function assessRank()
 	{
-		$hasOnePair = $this->hasOnePair();
-		Zend_Debug::dump($hasOnePair, '$hasOnePair');
+		Zend_Debug::dump($this->hasOnePair(), '$hasOnePair');
+		Zend_Debug::dump($this->hasTwoPair(), 'hasTwoPair()');
 		die;
 	}
 	
@@ -49,32 +49,59 @@ class Poker_Hand extends Poker_Deck
 			return $a->rankIndex < $b->rankIndex ? -1 : 1;
 		});
 	}
-
-	private function hasOnePair()
+	
+	/**
+	 * Count same ranks
+	 * @param array $cards Array holding Poker_Card objects
+	 */
+	private function getCounts($cards)
 	{
-		//sort by rank index first
-//		Zend_Debug::dump($this->cards, 'UNSORTED');
-		$this->sortAscByRankIndex($this->cards);
-//		Zend_Debug::dump($this->cards, 'SORTED');
-		
-//		$cards = array();
-//		foreach($this->cards as $k => $card)
-//			$cards[$k] = (array)$card;
-		
 		//count values
 		$counts = array();
-		foreach($this->cards as $card)
+		foreach($cards as $card)
 		{
 			if(!array_key_exists($card->rankIndex, $counts))
 				$counts[$card->rankIndex] = 0;
 			$counts[$card->rankIndex]++;
 		}
-		Zend_Debug::dump($counts);
+		return $counts;
+	}
+
+	private function hasOnePair()
+	{
+		//count values
+		$counts = $this->getCounts($this->cards);		
+		$matches = 0;
+		foreach($counts as $v)
+		{
+			if($v == 2)
+				$matches++;
+		}
+		
+		if($matches == 1)
+			return true;
+		
 		return false;
 	}
 	
 	private function hasTwoPair()
 	{
+		$counts = $this->getCounts($this->cards);
+		$matches = 0;
+		foreach($counts as $v)
+		{
+			if($v == 2)
+				$matches++;
+		}
+		if($matches == 2)
+			return true;
+		
+		return false;
+	}
+	
+	private function hasStraight()
+	{
+		$this->sortAscByRankIndex($this->cards);
 		return false;
 	}
 }
