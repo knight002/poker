@@ -37,6 +37,12 @@ class Poker_Hand extends Poker_Deck
 	{
 		Zend_Debug::dump($this->hasOnePair(), '$hasOnePair');
 		Zend_Debug::dump($this->hasTwoPair(), 'hasTwoPair()');
+		Zend_Debug::dump($this->hasThreeOfAKind(), '$this->hasThreeOfAKind()');
+		Zend_Debug::dump($this->hasStraight(), '$this->hasStraight()');
+		Zend_Debug::dump($this->hasFlush(), '$this->hasFlush()');
+		Zend_Debug::dump($this->hasFullHouse(), '$this->hasFullHouse()');
+		Zend_Debug::dump($this->hasFourOfAKind(), '$this->hasFourOfAKind()');
+		Zend_Debug::dump($this->hasStraightFlush(), '$this->hasStraightFlush()');
 		die;
 	}
 	
@@ -71,14 +77,14 @@ class Poker_Hand extends Poker_Deck
 	{
 		//count values
 		$counts = $this->getCounts($this->cards);		
-		$matches = 0;
+		$match = 0;
 		foreach($counts as $v)
 		{
 			if($v == 2)
-				$matches++;
+				$match++;
 		}
 		
-		if($matches == 1)
+		if($match == 1)
 			return true;
 		
 		return false;
@@ -87,13 +93,28 @@ class Poker_Hand extends Poker_Deck
 	private function hasTwoPair()
 	{
 		$counts = $this->getCounts($this->cards);
-		$matches = 0;
+		$match = 0;
 		foreach($counts as $v)
 		{
 			if($v == 2)
-				$matches++;
+				$match++;
 		}
-		if($matches == 2)
+		if($match == 2)
+			return true;
+		
+		return false;
+	}
+
+	private function hasThreeOfAKind()
+	{
+		$counts = $this->getCounts($this->cards);
+		$match = 0;
+		foreach($counts as $v)
+		{
+			if($v == 3)
+				$match++;
+		}
+		if($match == 1)
 			return true;
 		
 		return false;
@@ -102,6 +123,69 @@ class Poker_Hand extends Poker_Deck
 	private function hasStraight()
 	{
 		$this->sortAscByRankIndex($this->cards);
+		if(
+			$this->cards[4]->rankIndex == $this->cards[3]->rankIndex + 1
+			&& $this->cards[3]->rankIndex == $this->cards[2]->rankIndex + 1
+			&& $this->cards[2]->rankIndex == $this->cards[1]->rankIndex + 1
+			&& $this->cards[1]->rankIndex == $this->cards[0]->rankIndex + 1
+		)
+			return true;
+
+		return false;
+	}
+	
+	private function hasFlush()
+	{
+		$suit = $this->cards[0]->getSuit();
+		if(
+			$suit == $this->cards[1]->getSuit()
+			&& $suit == $this->cards[2]->getSuit()
+			&& $suit == $this->cards[3]->getSuit()
+			&& $suit == $this->cards[4]->getSuit()
+		)
+			return true;
+
+		return false;
+	}
+
+	private function hasFullHouse()
+	{
+		$counts = $this->getCounts($this->cards);
+		$match2 = 0;
+		$match3 = 0;
+		foreach($counts as $v)
+		{
+			if($v == 2)
+				$match2++;
+			if($v == 3)
+				$match3++;
+		}
+		if($match2 && $match3)
+			return true;
+		
+		return false;
+	}
+
+	private function hasFourOfAKind()
+	{
+		$counts = $this->getCounts($this->cards);
+		$match = 0;
+		foreach($counts as $v)
+		{
+			if($v == 4)
+				$match++;
+		}
+		if($match == 1)
+			return true;
+		
+		return false;
+	}
+	
+	private function hasStraightFlush()
+	{
+		if($this->hasStraight() && $this->hasFlush())
+			return true;
+
 		return false;
 	}
 }
